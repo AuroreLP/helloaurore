@@ -1,0 +1,7 @@
+# ignorer les fichiers sensibles et les dépendances
+.env
+vendor/
+node_modules/
+logs/
+storage/
+.DS_Store

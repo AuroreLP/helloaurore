@@ -1,0 +1,67 @@
+services:
+  web:
+    build: ./PHP
+    container_name: helloaurore_web
+    volumes:
+      - ./public:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - helloaurore_network
+
+  nginx:
+    image: nginx:1.27
+    container_name: helloaurore_nginx
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html
+      - ./Nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+    networks:
+      - helloaurore_network
+
+  db:
+    image: mysql:8.0
+    container_name: helloaurore_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - helloaurore_network
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: helloaurore_adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - helloaurore_network
+
+  mongodb:
+    image: mongo:8.0.5
+    container_name: helloaurore_mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "8090:27017"
+    networks:
+      - helloaurore_network
+
+volumes:
+  db_data:
+
+networks:
+  helloaurore_network:
