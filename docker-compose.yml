@@ -4,6 +4,8 @@ services:
     container_name: helloaurore_web
     volumes:
       - ./public:/var/www/html
+    env_file:
+      - .env  # Charge les variables depuis le fichier .env
     depends_on:
       - db
     networks:
